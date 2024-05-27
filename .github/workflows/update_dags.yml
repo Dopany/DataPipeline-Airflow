@@ -25,7 +25,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: dopany-airflow.ddns.net
-          username: de1
+          username: airflow
           port: 2222
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
