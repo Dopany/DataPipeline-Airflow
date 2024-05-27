@@ -23,11 +23,11 @@ jobs:
           ssh-keyscan -p 2222 dopany-airflow.ddns.net >> ~/.ssh/known_hosts
 
       - name: Verify SSH Configuration
-          run: |
-            echo "SSH Configuration:"
-            cat ~/.ssh/config || echo "No custom SSH config found"
-            echo "Known Hosts:"
-            cat ~/.ssh/known_hosts
+        run: |
+          echo "SSH Configuration:"
+          cat ~/.ssh/config || echo "No custom SSH config found"
+          echo "Known Hosts:"
+          cat ~/.ssh/known_hosts
 
       - name: Debug SSH Agent
         run: |
