@@ -23,7 +23,7 @@ jobs:
           ssh-keyscan -p 2222 dopany-airflow.ddns.net >> ~/.ssh/known_hosts
 
       - name: Sync DAGs to Airflow server
-        run: scp -r -P 2222 ./dags/* airflow@dopany-airflow.ddns.net:/opt/airflow/dags
+        run: scp -r -P 2222 ./dags/* root@dopany-airflow.ddns.net:/opt/airflow/dags
 
       - name: Restart Airflow Scheduler
         uses: appleboy/ssh-action@master
