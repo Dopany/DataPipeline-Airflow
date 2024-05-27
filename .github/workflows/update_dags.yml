@@ -20,7 +20,7 @@ jobs:
 
       - name: Add SSH known_hosts
         run: |
-          ssh-keyscan -p 2222 dopany-airflow.ddns.net >> /.ssh/known_hosts
+          ssh-keyscan -p 2222 dopany-airflow.ddns.net >> ~/.ssh/known_hosts
 
       - name: Sync DAGs to Airflow server
         run: scp -r -P 2222 ./dags/* airflow@dopany-airflow.ddns.net:/opt/airflow/dags
