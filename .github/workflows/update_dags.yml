@@ -13,20 +13,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Sync DAGs to Airflow server
-        uses: appleboy/scp-action@master
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          host: ${{ secrets.dopany-airflow.ddns.net }}
-          username: ${{ secrets.airflow }}
-          password: ${{ secrets.airflow }}
-          source: "./dags/*"
-          target: "/path/to/airflow/dags"
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Sync DAGs to Airflow server
+        run: scp -r -P 2222 ./dags/* airflow@dopany-airflow.ddns.net:/opt/airflow/dags
 
       - name: Restart Airflow Scheduler
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.dopany-airflow.ddns.net }}
-          username: ${{ secrets.airflow }}
-          password: ${{ secrets.airflow }}
+          host: dopany-airflow.ddns.net
+          username: de1
+          port: 2222
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             airflow dags reload
