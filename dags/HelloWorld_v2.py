@@ -5,6 +5,7 @@ from datetime import datetime
 @task
 def print_hello():
     print("hello_git_update")
+    print('from JuYoung')
     return "hello!"
 
 @task
