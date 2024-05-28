@@ -7,34 +7,37 @@ from transformers import pipeline
 import pandas as pd
 import datetime as dt
 import praw
+import logging
 
 MAX_SEQUENCE_LENGTH = 512
 MONTHS = ["December", "November", "October", "September", "August", "July", "June", "May", "April", "March", "February", "January"]
 YEARS = ["2024", "2023"]
 
-# api key
-"""
-    reddit = praw.Reddit(
-      client_id="Q0r0aDnOshw7X7M4vHnzIw",
-      client_secret="XkMtcZ_96Hw3DPH_aJw_ghbszu7jBg",
-      user_agent="testscript by u/purotae",
-    )
-"""
+
 def get_reddit_comments(**context):
+    try:
+        logging.info("Attempting to create Reddit instance with provided parameters.")
+        reddit = praw.Reddit(
+            client_id=context['params']['client_id'],
+            client_secret=context['params']['client_secret'],
+            user_agent=context['params']['user_agent'],
+        )
+        logging.info("Reddit instance created successfully.")
         
-    reddit = praw.Reddit(
-      client_id=context['params']['client_id'],
-      client_secret=context['params']['client_secret'],
-      user_agent=context['params']['user_agent'],
-    )
-    subreddit = reddit.subreddit("wallstreetbets")
-    return subreddit
-
-
-def extract_comment_to_df(**context):
+        logging.info("Attempting to access subreddit 'wallstreetbets'.")
+        subreddit = reddit.subreddit("wallstreetbets")
+        logging.info("Accessed subreddit 'wallstreetbets' successfully.")
+    except KeyError as e:
+        logging.error(f"Missing required parameter in context: {e}")
+        raise
+    except praw.exceptions.PRAWException as e:
+        logging.error(f"PRAW-related error occurred: {e}")
+        raise
+    except Exception as e:
+        logging.error(f"An unexpected error occurred in get_reddit_comments: {e}")
+        raise
     reddit_comments = pd.DataFrame(columns=['ID', 'BASE_DT', 'COMMENT_CONTENT', 'COMMENT_SENTIMENT'])
     pipe = pipeline("text-classification", model="mwkby/distilbert-base-uncased-sentiment-reddit-crypto")
-    subreddit = context['task_instance'].xcom_pull(key = 'return_value', task_ids='get_reddit_comments')
     i = 1
     for year in YEARS:
         for month in MONTHS:
@@ -82,14 +85,14 @@ def judge_setiment(sentiments):
         return 'negative'
 
 dag = DAG(
-    dag_id='reddit_comment_analysis',
+    dag_id='reddit_comment_dag',
     start_date=datetime(2024, 1, 1),
     max_active_runs=1,
     schedule='0 2 * * *',
     catchup=False,
     default_args = {
     'retries': 1,
-    'retry_delay': timedelta(minutes=3),
+    'retry_delay': timedelta(minutes=2),
     }
     )
 
@@ -101,10 +104,4 @@ get_reddit_comments = PythonOperator(
             'user_agent': Variable.get('user_agent') },
     dag=dag)
 
-extract_comment_to_df = PythonOperator(
-    task_id='extract_comment_to_df',
-    python_callable=extract_comment_to_df,
-    dag=dag)
-
-
-get_reddit_comments >> extract_comment_to_df
+get_reddit_comments
