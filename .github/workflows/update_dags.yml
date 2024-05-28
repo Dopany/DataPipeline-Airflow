@@ -22,6 +22,22 @@ jobs:
         run: |
           ssh-keyscan -p 2222 dopany-airflow.ddns.net >> ~/.ssh/known_hosts
 
+      - name: Verify SSH Configuration
+        run: |
+          echo "SSH Configuration:"
+          cat ~/.ssh/config || echo "No custom SSH config found"
+          echo "Known Hosts:"
+          cat ~/.ssh/known_hosts
+
+      - name: Debug SSH Agent
+        run: |
+          ssh-add -l
+
+      - name: Debug SSH Connection
+        run: |
+          ssh -vvv -p 2222 airflow@dopany-airflow.ddns.net "echo SSH connection successful"
+      
+
       - name: Sync DAGs to Airflow server
         run: scp -r -P 2222 ./dags/* airflow@dopany-airflow.ddns.net:/opt/airflow/dags
 

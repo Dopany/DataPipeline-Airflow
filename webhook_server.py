@@ -20,7 +20,6 @@ def webhook():
 def update_dags():
     dags_dir = '/airflow/dags'
     subprocess.run(['git', '-C', dags_dir, 'pull'], check=True)
-    subprocess.run(['airflow', 'dags', 'reload'], check=True)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
