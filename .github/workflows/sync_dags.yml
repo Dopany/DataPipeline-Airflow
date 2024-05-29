@@ -22,6 +22,8 @@ jobs:
         port: 2221
         source: "dags/"
         target: "/opt/airflow/dags"
+        overwrite: true
+        ssh_args: "-o StrictHostKeyChecking=no"
 
 #    - name: Restart Airflow
 #      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "airflow webserver restart"
