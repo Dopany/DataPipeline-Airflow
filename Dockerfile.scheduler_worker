@@ -38,8 +38,14 @@ RUN echo "cd /opt/airflow" >> /etc/bash.bashrc
 RUN mkdir -p /opt/airflow/logs /opt/airflow/dags /opt/airflow/plugins
 RUN chown -R airflow:root /opt/airflow
 
+# Set SSH Key
+RUN mkdir -p /root/.ssh && \
+    ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -N "" && \
+    cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+
 USER airflow
 
+# Install Modules
 RUN pip install pip-autoremove
 RUN pip install transformers
 RUN pip install praw
