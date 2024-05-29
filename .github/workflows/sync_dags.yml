@@ -13,6 +13,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Add SSH key to known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -p 2221 -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
     - name: Sync files to Scheduler
       uses: appleboy/scp-action@master
       with:
@@ -22,8 +27,6 @@ jobs:
         port: 2221
         source: "dags/"
         target: "/opt/airflow/dags"
-        overwrite: true
-        ssh_args: "-o StrictHostKeyChecking=no"
 
 #    - name: Restart Airflow
 #      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "airflow webserver restart"
