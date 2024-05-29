@@ -38,10 +38,12 @@ RUN echo "cd /opt/airflow" >> /etc/bash.bashrc
 RUN mkdir -p /opt/airflow/logs /opt/airflow/dags /opt/airflow/plugins
 RUN chown -R airflow:root /opt/airflow
 
-RUN apt-get install vim
-
 USER airflow
 
 RUN pip install pip-autoremove
+RUN pip install transformers
+RUN pip install praw
+RUN pip install pandas
+RUN pip install torch
 
 

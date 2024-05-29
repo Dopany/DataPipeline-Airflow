@@ -1,0 +1,29 @@
+name: Sync Airflow DAGs to Scheduler
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-dags:
+    runs-on: ubuntu-latest  # GitHub 호스팅 러너를 사용합니다.
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Sync files to Scheduler
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 2221
+        source: "dags/"
+        target: "/opt/airflow/dags"
+
+#    - name: Restart Airflow
+#      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "airflow webserver restart"
+#      env:
+#        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
