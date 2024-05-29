@@ -26,7 +26,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 2221
         source: "dags/"
-        target: "/opt/airflow/dags"
+        target: "/opt/airflow"
 
 #    - name: Restart Airflow
 #      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "airflow webserver restart"
