@@ -30,6 +30,8 @@ RUN id -u dev2 &>/dev/null || useradd -ms /bin/bash -g dev dev2 && echo 'dev2:de
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
 RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
+RUN echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
+RUN sed -i 's/dag_dir_list_interval = 300/dag_dir_list_interval = 60/' /opt/airflow/airflow.cfg
 
 # Set the home directory for SSH sessions
 RUN echo "cd /opt/airflow" >> /etc/bash.bashrc
