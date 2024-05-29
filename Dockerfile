@@ -39,7 +39,7 @@ RUN echo "cd /opt/airflow" >> /etc/bash.bashrc
 RUN mkdir -p /opt/airflow/logs /opt/airflow/dags /opt/airflow/plugins
 RUN chown -R airflow:root /opt/airflow
 
-RUN apt-get install vim
+RUN apt-get install -y vim
 
 USER airflow
 
