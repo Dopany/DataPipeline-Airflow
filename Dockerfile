@@ -1,4 +1,4 @@
-FROM apache/airflow:2.5.1
+FROM apache/airflow:2.9.1
 
 USER root
 
@@ -42,6 +42,8 @@ RUN chown -R airflow:root /opt/airflow
 RUN apt-get install -y vim
 
 USER airflow
+
+RUN airflow db init
 
 RUN pip install pip-autoremove
 

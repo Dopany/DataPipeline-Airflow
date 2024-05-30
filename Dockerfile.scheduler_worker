@@ -1,4 +1,4 @@
-FROM apache/airflow:2.5.1
+FROM apache/airflow:2.9.1
 
 USER root
 
@@ -44,6 +44,8 @@ RUN mkdir -p /root/.ssh && \
     cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
 
 USER airflow
+
+RUN airflow db init
 
 # Install Modules
 RUN pip install pip-autoremove
